@@ -1,6 +1,9 @@
 {
   "pages": [
-    "pages/index/index"
+    "pages/index/index",
+    "pages/login/login",
+    "pages/wweibo/wweibo"
+    
   ],
   "window": {
     "backgroundColor": "#F6F6F6",
@@ -8,6 +11,11 @@
     "navigationBarBackgroundColor": "#F6F6F6",
     "navigationBarTitleText": "强哥-微博",
     "navigationBarTextStyle": "black"
+  },
+  "permission": {
+    "scope.userLocation": {
+        "desc": "你的位置将用于微博的展示"
+    }
   },
   "sitemapLocation": "sitemap.json",
   "style": "v2"

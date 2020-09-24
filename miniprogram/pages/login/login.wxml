@@ -1,0 +1,11 @@
+<view class="container">
+  <view class="logo-group">
+    <image class="logo" src="../../images/logo.jpg"></image>
+  </view>
+
+  <view class="tips">授权后，才能使用后续功能。。。</view>
+
+  <button type="primary" open-type="getUserInfo" bindgetuserinfo="onGetUserInfo">授权</button>
+
+  <button type="default" >返回</button>
+</view>

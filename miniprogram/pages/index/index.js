@@ -24,8 +24,37 @@ Page({
         console.log(windowWidth);
     },
 
+    //写微博
     onWriteWeiboTap: function(event){
-        console.log(event)
+        const that = this;
+        //判断用户是否授权
+        if (app.is_login()) {
+            //调起选择提示框
+            wx.showActionSheet({
+              itemList: ['文字','照片','视频'],
+              success: res => {
+                  const tapIndex = res.tapIndex;
+                  if(tapIndex == 0){
+                    wx.navigateTo({url: '../wweibo/wweibo?type='+tapIndex,})
+                  }else if(tapIndex == 1){
+                    wx.chooseImage({
+                        success: res => {
+                          const tempImages = res.tempFilePaths;
+                          that.setData({
+                            tempImages:tempImages
+                          })
+                          wx.navigateTo({url: '../wweibo/wweibo?type='+tapIndex,})
+                        }
+                      })
+                  }
+                  
+              }
+            })
+        } else {
+            wx.navigateTo({
+              url: '../login/login',
+            })
+        }
     }
 
 })

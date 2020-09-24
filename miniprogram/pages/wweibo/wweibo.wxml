@@ -1,0 +1,28 @@
+<view class="container">
+  <form bindsubmit="onSubmitEvent">
+    <!-- 内容输入框 -->
+    <textarea name="content" class="textarea" placeholder="请输入您的心情"></textarea>
+    <!-- 照片选择框 -->
+    <view wx:if="{{type == 1}}" class="image-list-group">
+      <view wx:for="{{tempImages}}" wx:key="key" class="image-group" style="width:{{imageSize}}px;height:{{imageSize}}px">
+        <image src="{{item}}"></image>
+        <view class="close-btn" bindtap="onRemoveBtnTap" data-index="{{index}}"></view>
+      </view>
+      <!-- 添加图片样式 -->
+      <view wx:if="{{ tempImages.length < 9}}" class="add-image-btn" style="width:{{imageSize}}px;height:{{imageSize}}px" bindtap="onAddImageTap">
+        <view>+</view>
+      </view>
+    </view>
+  <!-- 位置信息 -->
+    <view class="location-group" bindtap="onLocationTap">
+      <view class="left-group">
+        <image class="icon" src="../../images/location.png"></image>
+        <view class="location-name">{{location? location.name : '所在位置'}}</view>
+      </view>
+      <image class="arrow" src="../../images/arrow.png"></image>
+    </view>
+    <button form-type="submit" type="primary" class="submit-btn">发布</button>
+  </form>
+</view>
+
+

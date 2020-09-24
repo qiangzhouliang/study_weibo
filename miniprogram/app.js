@@ -16,5 +16,39 @@ App({
     }
 
     this.globalData = {}
+
+    this.loadUserInfo();
+  },
+
+  loadUserInfo: function(){
+    const that = this;
+    wx.getSetting({
+      withSubscriptions: true,
+      success: res => {
+        const isUserInfo = res.authSetting['scope.userInfo'];
+        if(isUserInfo){
+          wx.getUserInfo({
+            success: res => {
+              const userInfo = res.userInfo;
+              that.setUserInfo(userInfo);
+            }
+          })
+        }
+      }
+    })
+  },
+  //判断是否已经授权
+  is_login: function () {
+    if (this.globalData.userInfo) {
+      return true;
+    } else {
+      return false;
+    }
+  },
+
+  //设置用户信息
+  setUserInfo: function(userInfo){
+    this.globalData.userInfo = userInfo;
   }
+  
 })

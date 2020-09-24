@@ -57,7 +57,7 @@
         <image mode="aspectFill" style="width:{{twoImageSize}}px; height:{{twoImageSize}}px"
         src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1600514632595&di=3aaca810bb5b156901f6b9a4456f50a8&imgtype=0&src=http%3A%2F%2Fn.sinaimg.cn%2Fsinacn11%2F600%2Fw700h700%2F20180424%2F514b-fzqvvsa3694420.jpg"/>
         <image mode="aspectFill" style="width:{{twoImageSize}}px; height:{{twoImageSize}}px"
-        src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1600514632595&di=3aaca810bb5b156901f6b9a4456f50a8&imgtype=0&src=http%3A%2F%2Fn.sinaimg.cn%2Fsinacn11%2F600%2Fw700h700%2F20180424%2F514b-fzqvvsa3694420.jpg"/>
+        src="cloud://test-cv537.7465-test-cv537-1301968032/weibos/2020/9/23/082d6240-c336-4412-9d3b-4b27877983f8.png"/>
       </view>
     </view>
     <view class="weibo-handle">
@@ -89,7 +89,7 @@
     <view class="weibo-content-group">
       <view class="content">大家快来学习小程序</view>
       <view class="image-list-group">
-        <image wx:for="{{images}}" mode="aspectFill" style="width:{{threeImageSize}}px; height:{{threeImageSize}}px"
+        <image wx:for="{{images}}" wx:key="key" mode="aspectFill" style="width:{{threeImageSize}}px; height:{{threeImageSize}}px"
         src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1600514632595&di=3aaca810bb5b156901f6b9a4456f50a8&imgtype=0&src=http%3A%2F%2Fn.sinaimg.cn%2Fsinacn11%2F600%2Fw700h700%2F20180424%2F514b-fzqvvsa3694420.jpg"/>
         <view wx:if="{{images.length%3 == 2}}" style="width:{{threeImageSize}}px; height:{{threeImageSize}}px"></view>
       </view>
