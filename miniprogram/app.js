@@ -17,9 +17,17 @@ App({
 
     this.globalData = {}
 
+    //加载用户信息
     this.loadUserInfo();
+
+    //设置设备信息
+    this.setDeviceModel();
+    
   },
 
+  /**
+   * 加载用户信息
+   */
   loadUserInfo: function(){
     const that = this;
     wx.getSetting({
@@ -31,6 +39,14 @@ App({
             success: res => {
               const userInfo = res.userInfo;
               that.setUserInfo(userInfo);
+            }
+          });
+          //获取用户ID
+          wx.cloud.callFunction({
+            name: "login",
+            success: res => {
+              const openId = res.result.openid;
+              that.globalData.userInfo.openId = openId;
             }
           })
         }
@@ -49,6 +65,16 @@ App({
   //设置用户信息
   setUserInfo: function(userInfo){
     this.globalData.userInfo = userInfo;
-  }
+  },
+
+  /**
+   * 设置设备信息
+   */
+  setDeviceModel: function(){
+    const systemInfo = wx.getSystemInfoSync();
+    let model = systemInfo.model;
+    model.replace(/<.*>/,"");
+    this.globalData.model = model;
+  },
   
 })

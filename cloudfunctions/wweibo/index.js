@@ -35,27 +35,31 @@ exports.main = async (event, context) => {
   const author = event.author;
   const location = event.location;
   const images = event.images; //fileId
-  
-  const imagesUrls = [];
-  images.forEach((value,index)=>{
-    const imageUrl = getImageUrl(value);
-    imagesUrls.push(imageUrl);
-  })
+  const video = event.video; //fileId
+  const device = event.device; //fileId
+  if (images && images.length > 0) {
+    const imagesUrls = [];
+    images.forEach((value,index)=>{
+      const imageUrl = getImageUrl(value);
+      imagesUrls.push(imageUrl);
+    })
 
-  //图片涉黄检查
-  let imgClient = new ImageClient({ AppId, SecretId, SecretKey }); 
-  const imgResp = await imgClient.imgPornDetect({
-    data: {
-      url_list: imagesUrls
-    }
-  })
-  const imgCheckResult = JSON.parse(imgResp.body);
-  imgCheckResult.result_list.forEach((value,index) => {
-    const result = value.data.result;
-    if(result != 0){
-      return {"errcode": 2,"errmsg": "您的微博有风险，请修改再发布"};
-    }
-  })
+    //图片涉黄检查
+    let imgClient = new ImageClient({ AppId, SecretId, SecretKey }); 
+    const imgResp = await imgClient.imgPornDetect({
+      data: {
+        url_list: imagesUrls
+      }
+    })
+    const imgCheckResult = JSON.parse(imgResp.body);
+    imgCheckResult.result_list.forEach((value,index) => {
+      const result = value.data.result;
+      if(result != 0){
+        return {"errcode": 2,"errmsg": "您的微博有风险，请修改再发布"};
+      }
+    })
+  }
+  
   
   //内容安全检查
   const tokenResp = await got(TOKEN_URL);
@@ -75,7 +79,10 @@ exports.main = async (event, context) => {
           content:content,
           author:author,
           location: location,
-          images:images
+          images:images,
+          video:video,
+          create_time: db.serverDate(),
+          device: device,
         }
     })
   } else {

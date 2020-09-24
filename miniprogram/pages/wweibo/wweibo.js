@@ -1,7 +1,6 @@
 // pages/wweibo/wweibo.js
 import {getUUID,getExt} from "../../utils/util"
 const app = getApp();
-const db = wx.cloud.database();
 Page({
   data: {
     location: null,
@@ -19,7 +18,8 @@ Page({
     const pages = getCurrentPages();
     const indexPage = pages[0];
     const tempImages = indexPage.data.tempImages;
-    this.setData({tempImages:tempImages,type:type});
+    const tempVideo = indexPage.data.tempVideo;
+    this.setData({tempImages:tempImages,type:type,tempVideo:tempVideo});
   },
 
   initImageSize: function () {
@@ -76,7 +76,8 @@ Page({
     const weibo = {
       content: content,
       location: location,
-      author: author
+      author: author,
+      device: app.globalData.model,
     }
     //加载进度条
     wx.showLoading({
@@ -86,14 +87,9 @@ Page({
     //保存上传完文件的文件ID
     const fileIdList = [];
     if(this.data.tempImages && this.data.tempImages.length > 0){
-      const today = new Date();
-      const year = today.getFullYear();
-      const month = today.getMonth()+1;
-      const day = today.getDate();
-      
       this.data.tempImages.forEach((value,index) =>{
         //上传文件路径
-        const cloudPath="weibos/"+year+"/"+month+"/"+day+"/"+getUUID()+"."+getExt(value);
+        const cloudPath=this.getCloudPath(value);
         wx.cloud.uploadFile({
           cloudPath: cloudPath,
           filePath: value,
@@ -107,6 +103,19 @@ Page({
             }
           }
         })
+      })
+    } else if(that.data.tempVideo){
+      //如果有视频
+      //上传文件路径
+      const cloudPath = this.getCloudPath(that.data.tempVideo);
+      wx.cloud.uploadFile({
+        cloudPath: cloudPath,
+        filePath: that.data.tempVideo,
+        success: res => {
+          weibo.video = res.fileID;
+          //接下来 发布微博
+          that.publicWeibo(weibo);
+        }
       })
     } else {
       that.publicWeibo(weibo);
@@ -125,7 +134,10 @@ Page({
         if(_id){
           wx.showToast({
             title: '发布完成',
-          })
+          });
+          setTimeout(() => {
+            wx.navigateBack()
+          }, 800);
         } else {
           wx.showToast({
             title: res.result.errMsg,
@@ -158,5 +170,29 @@ Page({
     this.setData({
       tempImages:tempImages
     })
-  }
+  },
+
+  /**
+   * 获取上传到云的路径
+   */
+  getCloudPath: function (fileName) {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = today.getMonth()+1;
+    const day = today.getDate();
+    const cloudPath="weibos/"+year+"/"+month+"/"+day+"/"+getUUID()+"."+getExt(fileName);
+    return cloudPath;
+  },
+
+  /**
+   * 图片预览
+   */
+  onImageTap: function(event) {
+    const that = this;
+    const index = event.target.dataset.index;
+    wx.previewImage({
+      urls: that.data.tempImages,
+      current: that.data.tempImages[index]
+    })
+  },
 })

@@ -1,27 +1,54 @@
 //index.js
 const app = getApp()
+const db = wx.cloud.database();
 
 Page({
     data: {
-        images: [1,2,3,4,5,6,7,8]
+        weibos:[],
+        hasmore:true
     },
 
     onLoad: function() {
-        this.initImageSize();
+      
+    },
+    // 页面显示就会加载
+    onShow: function () {
+      this.loadWeibos();
     },
 
-    initImageSize: function() {
-        const windowWidth = wx.getSystemInfoSync().windowWidth;
-        const weiboWidth = windowWidth - 40;
-        //两张或四张图片的图片大小
-        const twoImageSize = (weiboWidth - 2.5) / 2;
-        //3张或6张图片的图片大小
-        const threeImageSize = (weiboWidth - 2.5 * 2) / 3;
-        this.setData({
-            twoImageSize: twoImageSize,
-            threeImageSize: threeImageSize
-        })
-        console.log(windowWidth);
+    //页面滚动到最底部
+    onReachBottom: function() {
+      this.loadWeibos(this.data.weibos.length);
+    },
+
+    //页面滚动到顶部
+    onPullDownRefresh: function () {
+      this.loadWeibos(0);
+    },
+    /**
+     * 加载首页微博数据,上拉刷新，下拉加载更多
+     */
+    loadWeibos: function (start = 0) {
+      const that = this;
+      wx.cloud.callFunction({
+        name: 'weibos',
+        data: {
+          start:start
+        }
+      }).then(res => {
+        const weibos = res.result.weibos;
+        let hasmore = true;
+        if(weibos.length == 0){
+          hasmore = false;
+        }
+        let newWeibos = [];
+        if(start > 0){
+          newWeibos = that.data.weibos.concat(weibos);
+        } else {
+          newWeibos = weibos;
+        }
+        that.setData({ weibos: newWeibos ,hasmore:hasmore})
+      })
     },
 
     //写微博
@@ -46,6 +73,17 @@ Page({
                           wx.navigateTo({url: '../wweibo/wweibo?type='+tapIndex,})
                         }
                       })
+                  } else if(tapIndex == 2){
+                    //选择视频
+                    wx.chooseVideo({
+                      success: res => {
+                        const tempVideo = res.tempFilePaths;
+                          that.setData({
+                            tempVideo:tempVideo
+                          })
+                          wx.navigateTo({url: '../wweibo/wweibo?type='+tapIndex,})
+                      },
+                    })
                   }
                   
               }
@@ -55,6 +93,5 @@ Page({
               url: '../login/login',
             })
         }
-    }
-
+    },
 })

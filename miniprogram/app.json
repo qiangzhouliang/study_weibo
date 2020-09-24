@@ -2,7 +2,8 @@
   "pages": [
     "pages/index/index",
     "pages/login/login",
-    "pages/wweibo/wweibo"
+    "pages/wweibo/wweibo",
+    "pages/weibod/weibod"
     
   ],
   "window": {

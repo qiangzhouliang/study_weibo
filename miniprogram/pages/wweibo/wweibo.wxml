@@ -5,13 +5,17 @@
     <!-- 照片选择框 -->
     <view wx:if="{{type == 1}}" class="image-list-group">
       <view wx:for="{{tempImages}}" wx:key="key" class="image-group" style="width:{{imageSize}}px;height:{{imageSize}}px">
-        <image src="{{item}}"></image>
+        <image src="{{item}}" bindtap="onImageTap" data-index="{{index}}"></image>
         <view class="close-btn" bindtap="onRemoveBtnTap" data-index="{{index}}"></view>
       </view>
       <!-- 添加图片样式 -->
       <view wx:if="{{ tempImages.length < 9}}" class="add-image-btn" style="width:{{imageSize}}px;height:{{imageSize}}px" bindtap="onAddImageTap">
         <view>+</view>
       </view>
+    </view>
+    <!-- 视频区域 -->
+    <view wx:if="{{ type == 2 }}">
+      <video src="{{ tempVideo }}"></video>
     </view>
   <!-- 位置信息 -->
     <view class="location-group" bindtap="onLocationTap">
